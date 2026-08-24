@@ -8,13 +8,9 @@ const clearButton = document.querySelector('[data-action="clear"]');
 const deleteButton = document.querySelector('[data-action="delete"]');
 const calculateButton = document.querySelector('[data-action="calculate"]');
 
-
 let currentNumber = "";
 let previousNumber = "";
 let operator = "";
-
-
-/* Update Display */
 
 function updateDisplay() {
 
@@ -27,26 +23,16 @@ function updateDisplay() {
 
 }
 
-
-/* Operator Symbols */
-
 function getOperatorSymbol(operator) {
 
     if (operator === "*") return "×";
-
     if (operator === "/") return "÷";
-
     if (operator === "-") return "−";
-
     if (operator === "+") return "+";
-
     if (operator === "%") return "%";
 
     return operator;
 }
-
-
-/* Number Buttons */
 
 numberButtons.forEach(button => {
 
@@ -66,9 +52,6 @@ numberButtons.forEach(button => {
 
 });
 
-
-/* Operator Buttons */
-
 operatorButtons.forEach(button => {
 
     button.addEventListener("click", () => {
@@ -82,9 +65,7 @@ operatorButtons.forEach(button => {
         }
 
         operator = button.dataset.operator;
-
         previousNumber = currentNumber;
-
         currentNumber = "";
 
         updateDisplay();
@@ -92,9 +73,6 @@ operatorButtons.forEach(button => {
     });
 
 });
-
-
-/* Calculate */
 
 function calculate() {
 
@@ -108,6 +86,7 @@ function calculate() {
 
     const previous = parseFloat(previousNumber);
     const current = parseFloat(currentNumber);
+    const operatorSymbol = getOperatorSymbol(operator);
 
     let result;
 
@@ -129,19 +108,19 @@ function calculate() {
 
             if (current === 0) {
 
+                previousDisplay.textContent =
+                    `${previousNumber} ${operatorSymbol} ${currentNumber} =`;
+
                 currentNumber = "Error";
+                currentDisplay.textContent = currentNumber;
 
                 previousNumber = "";
-
                 operator = "";
-
-                updateDisplay();
 
                 return;
             }
 
             result = previous / current;
-
             break;
 
         case "%":
@@ -150,20 +129,18 @@ function calculate() {
 
     }
 
-    currentNumber = String(
-        Number(result.toFixed(10))
-    );
+    result = Number(result.toFixed(10));
+
+    previousDisplay.textContent =
+        `${previousNumber} ${operatorSymbol} ${currentNumber} =`;
+
+    currentNumber = String(result);
+    currentDisplay.textContent = currentNumber;
 
     previousNumber = "";
-
     operator = "";
 
-    updateDisplay();
-
 }
-
-
-/* Equal Button */
 
 calculateButton.addEventListener("click", () => {
 
@@ -171,23 +148,15 @@ calculateButton.addEventListener("click", () => {
 
 });
 
-
-/* Clear Button */
-
 clearButton.addEventListener("click", () => {
 
     currentNumber = "";
-
     previousNumber = "";
-
     operator = "";
 
     updateDisplay();
 
 });
-
-
-/* Delete Button */
 
 deleteButton.addEventListener("click", () => {
 
@@ -196,9 +165,6 @@ deleteButton.addEventListener("click", () => {
     updateDisplay();
 
 });
-
-
-/* Keyboard Support */
 
 document.addEventListener("keydown", event => {
 
@@ -219,7 +185,6 @@ document.addEventListener("keydown", event => {
 
     }
 
-
     if (
         key === "+" ||
         key === "-" ||
@@ -237,25 +202,16 @@ document.addEventListener("keydown", event => {
 
     }
 
-
     if (key === "Enter" || key === "=") {
-
         calculateButton.click();
-
     }
-
 
     if (key === "Escape") {
-
         clearButton.click();
-
     }
 
-
     if (key === "Backspace") {
-
         deleteButton.click();
-
     }
 
 });
